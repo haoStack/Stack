@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.rmonkey.stack.mapper.BannerMapper">
+    <resultMap id="BannerMap" type="Banner">
+            <id property="id" column="ba_id" jdbcType="BIGINT"></id>
+            <result property="resource" column="ba_resource" jdbcType="VARCHAR"></result>
+            <result property="checked" column="ba_checked" jdbcType="TINYINT"></result>
+            <result property="weight" column="ba_weight" jdbcType="INTEGER"></result>
+            <result property="flag" jdbcType="TINYINT" column="ba_flag"></result>
+            <result property="createdBy" jdbcType="BIGINT" column="ba_created_by"></result>
+            <result property="createdTime" jdbcType="DATE" column="ba_created_time"></result>
+            <result property="modifyBy" jdbcType="BIGINT" column="ba_modify_by"></result>
+            <result property="modifyTime" jdbcType="DATE" column="ba_modify_time"></result>
+            <result property="modifyTimes" jdbcType="INTEGER" column="ba_modify_times"></result>
+            <result property="articleId" jdbcType="INTEGER" column="a_articleId"></result>
+    </resultMap>
+
+
+
+    <sql id="comm">
+        ${alias}.flag as ${alias}_flag ,${alias}.created_by as ${alias}_created_by
+         ,${alias}.created_time as ${alias}_create_time ,${alias}.modify_by as ${alias}_modify_by
+          ,${alias}.modify_time as ${alias}_modify_time,${alias}.modify_times as ${alias}_modify_times
+    </sql>
+    <!--查询被勾选的-->
+    <select id="getlistBanner" resultMap="BannerMap" >
+        select
+        ba.id as ba_id,ba.resource as ba_resource,ba.checked as ba_checked,ba.weight as ba_weight,
+        <include refid="comm">
+            <property name="alias" value="ba"/>
+        </include>,
+        a.id as a_articleid
+        from blog_banner ba LEFt join blog_banner_article bba on
+        ba.id = bba.banner_id right join blog_article a on bba.article_id = a.id
+    </select>
+
+
+</mapper>
